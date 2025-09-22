@@ -29,11 +29,29 @@ class LeafNode(HTMLNode):
     
     def to_html(self):
         if self.value == None or self.value == "":
-            raise ValueError()
+            raise ValueError("LeafNode value is empty")
         
         if self.tag == None:
             return self.value
         
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+    
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+    
+    def to_html(self):
+        if not self.tag or self.tag == "":
+            raise ValueError("ParentNode tag is empty")
+
+        if not self.children or len(self.children) == 0:
+            raise ValueError("Children's list is empty")
+        
+        children_concat = ""
+        for child in self.children:
+            child_text = child.to_html()
+            children_concat += child_text
             
+        return f"<{self.tag}{self.props_to_html()}>{children_concat}</{self.tag}>"
     
